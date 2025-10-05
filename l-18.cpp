@@ -17,112 +17,111 @@ struct Node // Node structure for linked list
 };
 
 // Function prototypes
-Node* userChoice(); // Function to store and display user choice
 void outputList(Node *); // Function to output the linked list
+void addAtHead(Node*&, double, string); // Function to add a node at the head
+void addAtTail(Node*&, double, string); // Function to add a node at the tail
 
 int main() 
 {
-    Node* head = nullptr; // Declare and initialize head pointer
-    head = userChoice(); // Call function to get user choice
-    
-    cout << "Outputting all reviews: " << endl;
-    outputList(head); // Call function to output the linked list
+    Node* head = nullptr; // Initialize the head of the linked list
 
-    return 0;
-}
-
-// Stores and displays user choice
-Node* userChoice()
-{
-    Node* userchoice = new Node;
     cout << endl;
     cout << "Which linked list method should we use?" << endl;
     cout << "[1] New nodes are added at the head of the linked list." << endl;
     cout << "[2] New nodes are added at the tail of the linked list." << endl;
 
-    while (true) // Loop to ensure valid input
-    {
-        cin >> userchoice->rating;
-    if (userchoice->rating == 1)
-        cout << "Choice: 1" << endl;
-    else if (userchoice->rating == 2)
-        cout << "Choice: 2" << endl;
-    else if (userchoice->rating != 1 && userchoice->rating != 2)
-        cout << "Invalid choice. Please enter either 1 or 2." << endl;
-
-    cout << "Enter review rating (0-5): ";
-    double rating;
-        cin >> rating;
-    if (rating >= 0 && rating <= 5)
-        cout << "Rating: " << rating << endl;
-    else
-        cout << "Invalid rating. Please enter a number between 0 and 5." << endl;
-    
-        cout << "Enter review comments: ";
-    string userComment;
-    cin.ignore(); // To ignore the newline character left in the buffer
-    getline(cin, userComment);
-    cout << "Comments: " << userComment << endl;
-
-    cout << "Enter another review? (Y/N): ";
-    char anotherReview;
-    cin >> anotherReview;
-    anotherReview = toupper(anotherReview); // Convert to uppercase for consistency
-    if (anotherReview == 'Y')
-        cout << "You chose to enter another review." << endl;
-    else if (anotherReview == 'N')
-        cout << "You chose not to enter another review." << endl;
-    else
-        cout << "Invalid choice. Please enter either Y or N." << endl;
-    
-    if (anotherReview == 'N')
-        break; // Exit the loop if user does not want to enter another review
+    int method;
+    cout << "Enter your choice (1 or 2): ";
+    cin >> method;
+    while (method != 1 && method != 2) {
+        cout << "Invalid choice. Please enter 1 or 2: ";
+        cin >> method;
     }
-    return userchoice; // Return the user choice node
+
+    // Collect reviews
+    for (int i = 0; i < SIZE; ++i)
+    {
+        double rating;
+        string comments;
+
+        cout << "Enter review rating (0-5): ";
+        cin >> rating;
+        while (rating < 0 || rating > 5)
+        {
+            cout << "Invalid rating. Please enter a number between 0 and 5: ";
+            cin >> rating;
+        }
+
+        cout << "Enter review comments: ";
+        cin.ignore();
+        getline(cin, comments);
+
+        if (method == 1)
+            addAtHead(head, rating, comments);
+        else
+            addAtTail(head, rating, comments);
+
+        
+        cout << "Enter another review? (Y/N): ";
+        char anotherReview;
+        cin >> anotherReview;
+        anotherReview = toupper(anotherReview); // Convert to uppercase for consistency
+        
+        if (anotherReview == 'Y')
+        cout << "You chose to enter another review." << endl;
+        else if (anotherReview == 'N')
+        break;
+        else
+        cout << "Invalid choice. Please enter either Y or N." << endl;
+    }
+
+    cout << "Outputting all reviews: " << endl;
+    outputList(head); // Pass head pointer to outputList
+
+    return 0;
 }
 
-// Outputs the linked list
+// Outputs the linked list of reviews with rating first then comments
 void outputList(Node *head)
 {
-    Node *current = head; // Start from the head of the list
-    Node *tail = nullptr; // Pointer to the tail of the linked list
-    for (int i = 0; i < SIZE; i++) // Loop to create nodes
-    {
-        Node* newNode = new Node; // Dynamically allocate memory for a new node
-
-        cin >> newNode->rating; // Get user rating
-        cin.ignore(); // To ignore the newline character left in the buffer
-        getline(cin, newNode->comments); // Get user comments
-
-        newNode->next = nullptr; // Initialize next pointer to nullptr
-
-        if (head == nullptr) // If the list is empty
-        {
-            head = newNode; // Set head to the new node
-            tail = newNode; // Set tail to the new node
-            current = head; // Update current pointer
-        }
-        else 
-        {
-            if (i % 2 == 0) // If user chose to add at head
-            {
-                newNode->next = head; // New node points to current head
-                head = newNode; // Update head to the new node
-                current = head; // Update current pointer
-            }
-            else // If user chose to add at tail
-            {
-                tail->next = newNode; // Current tail points to new node
-                tail = newNode; // Update tail to the new node
-            }
-        }
-    }
-
-    current = head; // Reset current to head for traversal
-    while (current != nullptr) // Traverse the list
+    Node* current = head; // Pointer to traverse the list
+    while (current != nullptr) // Traverse until the end of the list
     {
         cout << "Rating: " << current->rating << endl; // Output rating
         cout << "Comments: " << current->comments << endl; // Output comments
         current = current->next; // Move to the next node
+    }
+}
+
+// Adds a new node at the head of the linked list
+void addAtHead(Node*& head, double rating, string comments)
+{
+    Node* newNode = new Node; // Create a new node
+    newNode->rating = rating; // Set the rating
+    newNode->comments = comments; // Set the comments
+    newNode->next = head; // Point new node to the current head
+    head = newNode; // Update head to the new node
+}
+
+// Adds a new node at the tail of the linked list
+void addAtTail(Node*& head, double rating, string comments) 
+{
+    Node* newNode = new Node; // Create a new node
+    newNode->rating = rating; // Set the rating
+    newNode->comments = comments; // Set the comments
+    newNode->next = nullptr; // New node will be the last node, so next is nullptr
+
+    if (head == nullptr) // If the list is empty, new node becomes the head
+    {
+        head = newNode;
+    }
+    else // Otherwise, traverse to the end of the list and add the new node
+    {
+        Node* current = head;
+        while (current->next != nullptr)
+        {
+            current = current->next; // Move to the next node
+        }
+        current->next = newNode; // Link the last node to the new node
     }
 }
