@@ -23,6 +23,7 @@ struct Node // Node structure for linked list
 void outputList(Node *); // Function to output the linked list
 void addAtHead(Node*&, double, string); // Function to add a node at the head
 void addAtTail(Node*&, double, string); // Function to add a node at the tail
+void deleteList(Node*& head); // Function to delete the linked list and free memory
 
 int main() 
 {
@@ -42,7 +43,7 @@ int main()
         cin >> method;
     }
 
-    // Collect reviews
+    // Collects reviews from the user and add them to the linked list
     for (int i = 0; i < SIZE; ++i)
     {
         double rating;
@@ -64,13 +65,11 @@ int main()
             addAtHead(head, rating, comments);
         else
             addAtTail(head, rating, comments);
-
         
         cout << "Enter another review? (Y/N): ";
         char anotherReview;
         cin >> anotherReview;
         anotherReview = toupper(anotherReview); // Convert to uppercase for consistency
-        
         if (anotherReview == 'Y' || anotherReview == 'y')
         cout << "You chose to enter another review." << endl;
         else if (anotherReview == 'N' || anotherReview == 'n')
@@ -78,11 +77,11 @@ int main()
         else
         cout << "Invalid choice. Please enter either Y or N." << endl;
     }
-
     cout << endl;
     cout << "Outputting all reviews: " << endl;
     outputList(head); // Pass head pointer to outputList
     cout << endl;
+    deleteList(head); // Free memory allocated for the linked list
     return 0;
 }
 
@@ -156,4 +155,21 @@ void addAtTail(Node*& head, double rating, string comments)
         }
         current->next = newNode; // Link the last node to the new node
     }
+}
+
+// Deletes the entire linked list to free memory
+// Arguments: reference to head pointer
+// Returns: void
+void deleteList(Node*& head)
+{
+    Node* current = head;
+    Node* nextNode;
+
+    while (current != nullptr) {
+        nextNode = current->next; // Store the next node
+        delete current; // Delete the current node
+        current = nextNode; // Move to the next node
+    }
+    head = nullptr; // Set head to nullptr after deletion
+    cout << "Linked list deleted and memory freed." << endl << endl;
 }
