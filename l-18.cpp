@@ -17,15 +17,14 @@ struct Node // Node structure for linked list
 };
 
 // Function prototypes
-void userChoice(Node *); // Function to store and display user choice
+Node* userChoice(); // Function to store and display user choice
 void outputList(Node *); // Function to output the linked list
 
 int main() 
 {
     Node* head = nullptr; // Declare and initialize head pointer
-
-    userChoice(head); // Call function to get user choice
-
+    head = userChoice(); // Call function to get user choice
+    
     cout << "Outputting all reviews: " << endl;
     outputList(head); // Call function to output the linked list
 
@@ -33,9 +32,9 @@ int main()
 }
 
 // Stores and displays user choice
-void userChoice(Node *choice)
+Node* userChoice()
 {
-    int userchoice;
+    Node* userchoice = new Node;
     cout << endl;
     cout << "Which linked list method should we use?" << endl;
     cout << "[1] New nodes are added at the head of the linked list." << endl;
@@ -43,12 +42,12 @@ void userChoice(Node *choice)
 
     while (true) // Loop to ensure valid input
     {
-        cin >> userchoice;
-    if (userchoice == 1)
+        cin >> userchoice->rating;
+    if (userchoice->rating == 1)
         cout << "Choice: 1" << endl;
-    else if (userchoice == 2)
+    else if (userchoice->rating == 2)
         cout << "Choice: 2" << endl;
-    else if (userchoice != 1 && userchoice != 2)
+    else if (userchoice->rating != 1 && userchoice->rating != 2)
         cout << "Invalid choice. Please enter either 1 or 2." << endl;
 
     cout << "Enter review rating (0-5): ";
@@ -58,8 +57,8 @@ void userChoice(Node *choice)
         cout << "Rating: " << rating << endl;
     else
         cout << "Invalid rating. Please enter a number between 0 and 5." << endl;
-
-    cout << "Enter review comments: ";
+    
+        cout << "Enter review comments: ";
     string userComment;
     cin.ignore(); // To ignore the newline character left in the buffer
     getline(cin, userComment);
@@ -75,8 +74,11 @@ void userChoice(Node *choice)
         cout << "You chose not to enter another review." << endl;
     else
         cout << "Invalid choice. Please enter either Y or N." << endl;
+    
+    if (anotherReview == 'N')
+        break; // Exit the loop if user does not want to enter another review
     }
-
+    return userchoice; // Return the user choice node
 }
 
 // Outputs the linked list
@@ -88,9 +90,7 @@ void outputList(Node *head)
     {
         Node* newNode = new Node; // Dynamically allocate memory for a new node
 
-        cout << "Enter review rating (0-5): ";
         cin >> newNode->rating; // Get user rating
-        cout << "Enter review comments: ";
         cin.ignore(); // To ignore the newline character left in the buffer
         getline(cin, newNode->comments); // Get user comments
 
