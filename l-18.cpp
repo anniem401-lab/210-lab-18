@@ -69,7 +69,7 @@ int main()
         
         if (anotherReview == 'Y')
         cout << "You chose to enter another review." << endl;
-        else if (anotherReview == 'N')
+        else if (anotherReview == 'N' && i == 4)
         break;
         else
         cout << "Invalid choice. Please enter either Y or N." << endl;
@@ -85,11 +85,12 @@ int main()
 void outputList(Node *head)
 {
     Node* current = head; // Pointer to traverse the list
+    int reviewNum = 1; // Counter for review number
     while (current != nullptr) // Traverse until the end of the list
     {
-        cout << "Rating: " << current->rating << endl; // Output rating
-        cout << "Comments: " << current->comments << endl; // Output comments
+        cout << "   > Review #" << reviewNum << ": " << current->rating << ": " << current->comments << endl; // Output ratings with comments
         current = current->next; // Move to the next node
+        reviewNum++; // Increment review number
     }
 }
 
