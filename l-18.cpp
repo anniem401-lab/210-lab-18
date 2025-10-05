@@ -1,7 +1,10 @@
 // COMSC-210 | Lab 18 | Annie Morales
 // IDE used: Visual Studio Code
 
-// This program collects user input to be implemented into a linked list where each node contains a rating and a comment.
+// This program collects user input to be implemented into a linked list where 
+// each node contains a rating and a comment. The user can choose to add new nodes
+// at either the head or the tail of the linked list. After collecting the reviews,
+// the program outputs all reviews along with the average rating. 
 
 #include <iostream>
 #include <string>
@@ -29,6 +32,7 @@ int main()
     cout << "Which linked list method should we use?" << endl;
     cout << "[1] New nodes are added at the head of the linked list." << endl;
     cout << "[2] New nodes are added at the tail of the linked list." << endl;
+    cout << "--------------------------------------------------------" << endl;
 
     int method;
     cout << "Enter your choice (1 or 2): ";
@@ -67,21 +71,24 @@ int main()
         cin >> anotherReview;
         anotherReview = toupper(anotherReview); // Convert to uppercase for consistency
         
-        if (anotherReview == 'Y')
+        if (anotherReview == 'Y' || anotherReview == 'y')
         cout << "You chose to enter another review." << endl;
-        else if (anotherReview == 'N' && i == 4)
-        break;
+        else if (anotherReview == 'N' || anotherReview == 'n')
+        break; 
         else
         cout << "Invalid choice. Please enter either Y or N." << endl;
     }
 
+    cout << endl;
     cout << "Outputting all reviews: " << endl;
     outputList(head); // Pass head pointer to outputList
-
+    cout << endl;
     return 0;
 }
 
 // Outputs the linked list of reviews with rating first then comments
+// Arguments: head pointer
+// Returns: void
 void outputList(Node *head)
 {
     Node* current = head; // Pointer to traverse the list
@@ -92,9 +99,31 @@ void outputList(Node *head)
         current = current->next; // Move to the next node
         reviewNum++; // Increment review number
     }
+
+    // Displays the average rating of all reviews
+    if (head == nullptr) 
+    { // If the list is empty
+        cout << "No reviews to calculate average rating." << endl;
+    } 
+    else 
+    {
+        double sum = 0.0; // Sum of ratings
+        int count = 0; // Count of reviews
+        current = head; // Reset current to head
+        while (current != nullptr) 
+        {
+            sum += current->rating; // Add rating to sum
+            count++; // Increment count
+            current = current->next; // Move to the next node
+        }
+        double average = sum / count; // Calculate average
+        cout << "   > Average: " << average << endl; // Output average rating
+    }
 }
 
 // Adds a new node at the head of the linked list
+// Arguments: reference to head pointer, rating, comments
+// Returns: void
 void addAtHead(Node*& head, double rating, string comments)
 {
     Node* newNode = new Node; // Create a new node
@@ -105,6 +134,8 @@ void addAtHead(Node*& head, double rating, string comments)
 }
 
 // Adds a new node at the tail of the linked list
+// Arguments: reference to head pointer, rating, comments
+// Returns: void
 void addAtTail(Node*& head, double rating, string comments) 
 {
     Node* newNode = new Node; // Create a new node
